@@ -4,4 +4,4 @@ FROM amazoncorretto:17
 
 ..
 
-CMD ["java", "-jar", "service.jar"]
+CMD ["java", "-Dcom.sun.management.jmxremote", "-jar", "service.jar"]

@@ -1,0 +1,27 @@
+version: "3"
+services:
+  zookeeper:
+    image: 'zookeeper:latest'
+    ports:
+      - '2181:2181'
+  kafka:
+    image: 'wurstmeister/kafka:latest'
+    ports:
+      - '9092:9092'
+      - '9093:9093'
+    environment:
+       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+       KAFKA_ADVERTISED_LISTENERS: INSIDE://:9093,OUTSIDE://localhost:9092
+       KAFKA_LISTENERS: INSIDE://:9093,OUTSIDE://:9092
+       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
+       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE        
+    depends_on:
+      - zookeeper
+  kafdrop:
+    image: dmytronasyrov/kafdrop:latest
+    ports:
+      - '9000:9000'
+    environment:
+      KAFKA_BROKERCONNECT: kafka:9093
+    depends_on:
+      - kafka
